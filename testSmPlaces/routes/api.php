@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\BooksController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +17,12 @@ use Illuminate\Support\Facades\Route;
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
+Route::namespace('App\Http\Controllers\Api')->group(function () {
+    Route::post('auth/login', 'AuthController@login');
 
-// List books
-Route::get('artigos', [BooksController::class, 'index']);
+
+    // List books
+    Route::group(['middleware' => ['apiJwt']], function () {
+        Route::get('/books', 'BooksController@index');
+    });
+});

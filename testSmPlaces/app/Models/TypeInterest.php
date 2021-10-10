@@ -32,16 +32,13 @@ class TypeInterest extends Model
      *
      * @var bool
      */
-    public $timestamps = true;
+    public $timestamps = false;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'title',
-        'author',
-        'type_interest_id',
-        'user_id'
+        'texto'
     ];
 }
