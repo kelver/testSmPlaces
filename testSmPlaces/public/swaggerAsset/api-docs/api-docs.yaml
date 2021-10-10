@@ -3,8 +3,52 @@ info:
   title: 'APIBooks SMPlaces'
   version: '1.0.0'
 paths:
-  /books:
+  /getToken:
     post:
+      tags:
+        - "Authentication"
+      summary: "Returns user token"
+      description: ""
+      operationId: "getToken"
+      produces:
+        - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            additionalProperties:
+              type: "integer"
+              format: "int32"
+  /updateToken:
+    get:
+      tags:
+        - "Authentication"
+      summary: "Update user token"
+      description: ""
+      operationId: "updateToken"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "orderId"
+          in: "path"
+          description: "ID of pet that needs to be fetched"
+          required: true
+          type: "integer"
+          maximum: 10.0
+          minimum: 1.0
+          format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Order not found"
+  /books:
+    get:
       tags:
         - "Books"
       summary: "List books from user"
@@ -20,7 +64,6 @@ paths:
       responses:
         "405":
           description: "Invalid input"
-  /books/addBook:
     post:
       tags:
         - "Books"
@@ -36,8 +79,8 @@ paths:
           description: "successful operation"
         "400":
           description: "Invalid tag value"
-  /books/editBook/{idBook}:
-    post:
+  /books/{idBook}:
+    put:
       tags:
         - "Books"
       summary: "Edit a book from user"
@@ -52,8 +95,7 @@ paths:
           description: "successful operation"
         "400":
           description: "Invalid tag value"
-  /books/deleteBook/{idBook}:
-    post:
+    delete:
       tags:
         - "Books"
       summary: "Delete a book from list to the user"
@@ -84,47 +126,3 @@ paths:
           description: "successful operation"
         "400":
           description: "Invalid status value"
-  /users/inventory:
-    get:
-      tags:
-        - "Users"
-      summary: "Returns pet inventories by status"
-      description: "Returns a map of status codes to quantities"
-      operationId: "getInventory"
-      produces:
-        - "application/json"
-      parameters: []
-      responses:
-        "200":
-          description: "successful operation"
-          schema:
-            type: "object"
-            additionalProperties:
-              type: "integer"
-              format: "int32"
-  /users/order/{orderId}:
-    get:
-      tags:
-        - "Users"
-      summary: "Find purchase order by ID"
-      description: "For valid response try integer IDs with value >= 1 and <= 10.         Other values will generated exceptions"
-      operationId: "getOrderById"
-      produces:
-        - "application/xml"
-        - "application/json"
-      parameters:
-        - name: "orderId"
-          in: "path"
-          description: "ID of pet that needs to be fetched"
-          required: true
-          type: "integer"
-          maximum: 10.0
-          minimum: 1.0
-          format: "int64"
-      responses:
-        "200":
-          description: "successful operation"
-        "400":
-          description: "Invalid ID supplied"
-        "404":
-          description: "Order not found"
