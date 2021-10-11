@@ -1,28 +1,20 @@
 <?php
 
+use App\Http\Controllers\Api\{
+    AuthController,
+    BooksController,
+    InterestController
+};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
-Route::namespace('App\Http\Controllers\Api')->group(function () {
-    Route::post('auth/login', 'AuthController@login');
-
-
-    // List books
-    Route::group(['middleware' => ['apiJwt']], function () {
-        Route::get('/books', 'BooksController@index');
-    });
+Route::post('/allInterest', [InterestController::class, 'index']);
+Route::post('auth/login', [AuthController::class, 'login']);
+// List books
+Route::group(['middleware' => ['apiJwt']], function () {
+    Route::put('/books/{identify}', [BooksController::class, 'update']);
+    Route::delete('/books/{identify}', [BooksController::class, 'destroy']);
+    Route::get('/books/{identify}', [BooksController::class, 'show']);
+    Route::post('/books', [BooksController::class, 'store']);
+    Route::get('/books', [BooksController::class, 'index']);
 });

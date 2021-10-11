@@ -3,13 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\BooksCollection;
+use App\Http\Requests\StoreUpdateBook;
 use App\Http\Resources\BooksResource;
-use App\Models\Books;
-use Illuminate\Http\Request;
+use App\Services\BooksService;
 
 class BooksController extends Controller
 {
+    protected $bookService;
+
+    public function __construct(BooksService $bookService)
+    {
+        $this->bookService = $bookService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,22 +23,9 @@ class BooksController extends Controller
      */
     public function index()
     {
-        $searchBooks = Books::whereHas('user', function($q){
-            $q->where('id', auth()->id());
-        })->get();
+        $books = $this->bookService->getMyBooks();
 
-        $books = new BooksCollection($searchBooks);
-        return response()->json($books, 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-
+        return BooksResource::collection($books);
     }
 
     /**
@@ -41,53 +34,50 @@ class BooksController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUpdateBook $request)
     {
-        //
+        $book = $this->bookService->storeNewBook($request->validated());
+
+        return new BooksResource($book);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $identify
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($identify)
     {
-        //
-    }
+        $book = $this->bookService->getBook($identify);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return new BooksResource($book);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  string  $identify
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreUpdateBook $request, string $identify)
     {
-        //
+        $book = $this->bookService->updateBook($identify, $request->validated());
+
+        return response()->json(['message' => 'Updated.']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  string  $identify
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(string $identify)
     {
-        //
+        $book = $this->bookService->deleteBook($identify);
+
+        return response()->json([], 204);
     }
 }

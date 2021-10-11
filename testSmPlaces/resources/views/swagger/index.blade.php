@@ -49,22 +49,26 @@
             // Begin Swagger UI call region
             const ui = SwaggerUIBundle({
             url: "{{ asset('swaggerAsset/api-docs/api-docs.yaml') }}",
-                supportedSubmitMethods: ["get", "delete", "options", "head", "patch", "trace"], // No "post"
+                supportedSubmitMethods: [],
                 dom_id: '#swagger-ui',
-            deepLinking: true,
+            deepLinking: false,
             presets: [
                 SwaggerUIBundle.presets.apis,
-                SwaggerUIStandalonePreset
+                // SwaggerUIStandalonePreset
             ],
             plugins: [
-                SwaggerUIBundle.plugins.DownloadUrl,
+                // SwaggerUIBundle.plugins.DownloadUrl,
                 HideInfoUrlPartsPlugin
             ],
             layout: "BaseLayout"
         });
         // End Swagger UI call region
         window.ui = ui;
+
+            var nodes = document.querySelectorAll("input[type=text]");
+            nodes.parentNode.removeChild(nodes[i]);
     };
+
   </script>
   </body>
 </html>
