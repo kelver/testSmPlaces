@@ -3,12 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Books;
-use App\Models\TypeInterest;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class BooksTest extends TestCase
@@ -37,19 +33,43 @@ class BooksTest extends TestCase
      * @test
      * Test case post has expected data in the Model fillable
      */
-    public function check_post_contain_data_correct()
+    public function check_model_and_post_is_valid()
+    {
+        $books = new Books();
+        $post = [
+            'title'                 => 'Livro Test',
+            'author'                => 'Author Test',
+            'type_interest_id'      => 5,
+            'user_id'               => 1,
+        ];
+        $this->assertEquals(array_values(array_keys($post)), array_values($books->getFillable()));
+    }
+
+    /**
+     * @test
+     * Integration Test
+     * Test case post has expected data in the Model fillable
+     */
+    public function check_data_send_is_correct()
     {
         $books = new Books();
         $user = User::factory()->create();
         $this->actingAs($user);
         $this->assertIsInt($user->id);
         $this->assertGreaterThan(0, $user->id, 'Failed');
-        $post = [
-            'title'                 => 'Livro Test',
-            'author'                => 'Author Test',
-            'type_interest_id'      => 5,
-            'user_id'               => $user->id,
-        ];
-        $this->assertEquals(array_values(array_keys($post)), array_values($books->getFillable()));
     }
+
+    /**
+     * @test
+     * Integration Test
+     * Test case post has expected data in the Model fillable
+     */
+//    public function check_if_deletion_is_correct()
+//    {
+//        $books = Books::factory()->create();
+//        $user = User::factory()->create();
+//        $this->actingAs($user);
+//        $this->assertIsInt($user->id);
+//        $this->assertGreaterThan(0, $user->id, 'Failed');
+//    }
 }
