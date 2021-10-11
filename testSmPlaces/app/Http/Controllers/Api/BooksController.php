@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BooksCollection;
+use App\Http\Resources\BooksResource;
 use App\Models\Books;
 use Illuminate\Http\Request;
 
@@ -15,10 +17,11 @@ class BooksController extends Controller
      */
     public function index()
     {
-        $books = Books::whereHas('user', function($q){
+        $searchBooks = Books::whereHas('user', function($q){
             $q->where('id', auth()->id());
         })->get();
 
+        $books = new BooksCollection($searchBooks);
         return response()->json($books, 200);
     }
 

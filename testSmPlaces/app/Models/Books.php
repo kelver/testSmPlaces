@@ -48,4 +48,7 @@ class Books extends Model
     public function user(){
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+    public function typeInterest(){
+        return $this->hasOne(TypeInterest::class, 'id', 'type_interest_id');
+    }
 }
